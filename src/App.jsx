@@ -20,6 +20,15 @@ return (
 )
 }
 
+function EducationButtons({add,remove}) {
+  return (
+    <div className='edu-buttons'>
+  <button className='edu-add'>Add</button>
+  <button className='edu-remove'>Remove</button>
+    </div>
+  )
+}
+
 function PersonalDetails ({fullName, phoneNum, email, address, onChange}) {
   return (
     <form className='personal-details'>
@@ -32,16 +41,41 @@ function PersonalDetails ({fullName, phoneNum, email, address, onChange}) {
   )
 }
 
+function EducationDetails ({degree, schoolName, location, startDate, endDate, onChange}) {
+  return (
+    <form className='education-details' onSubmit={(e)=> {e.preventDefault()}}>
+      <h3>Educations</h3>
+      <InputSet type='text' id='degree' labelText='Degree' placeholder='Enter degree or field of study' value={degree} onChange={onChange} data-key='degree'></InputSet>
+      <InputSet type='text' id='school-name' labelText='School' placeholder='Enter university or school name' value={schoolName} onChange={onChange} data-key='schoolName' recommended></InputSet>
+      <InputSet type='text' id='location' labelText='Location' placeholder='Enter location' value={location} onChange={onChange} data-key='location' recommended></InputSet>
+      <div className='date-group'>
+      <InputSet type='text' id='start-date' labelText='Start Date' placeholder='Enter start date' value={startDate} onChange={onChange} data-key='startDate' recommended></InputSet>
+      <InputSet type='text' id='end-date' labelText='End Date' placeholder='Enter end date' value={endDate} onChange={onChange} data-key='endDate' recommended></InputSet>
+      <EducationButtons/>
+      </div>
+    </form>
+  )
+}
+
 function App() {
   const [personalInfo, setPersonalInfo] = useState('');
+  const [educationInfo, setEducationInfo] = useState('');
   function handleInfoChange(e) {
-    const key = e.target.dataset;
-    console.log(key);
-    setPersonalInfo({...personalInfo, [key]:e.target.value})
+    const {key} = e.target.dataset;
+    if (e.target.parentElement.parentElement.className === 'personal-details') {
+      setPersonalInfo({...personalInfo, [key]:e.target.value})
+    }
+    else if (e.target.parentElement.parentElement.className || e.target.parentElement.parentElement.parentElement.className  === 'education-details') {
+      setEducationInfo({...educationInfo, [key]:e.target.value})
+    ;}
+    console.log(personalInfo)
+    console.log(educationInfo)
   }
+  
   return (
     <>
 <PersonalDetails fullName={personalInfo.fullName} phoneNum={personalInfo.phoneNum} email={personalInfo.email} address={personalInfo.address} onChange={handleInfoChange}></PersonalDetails>
+<EducationDetails degree={educationInfo.degree} schoolName={educationInfo.schoolName} location={educationInfo.location} startDate={educationInfo.startDate} endDate={educationInfo.endDate} onChange={handleInfoChange}></EducationDetails>
     </>
   )
 }
